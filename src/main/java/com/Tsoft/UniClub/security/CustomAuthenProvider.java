@@ -36,13 +36,16 @@ public class CustomAuthenProvider implements AuthenticationProvider {
         List<RoleDTO> roles = authenService.checkLogin(authenRequest);
 
         if (roles != null && roles.size() > 0) {
+                // StreamAPI
+                //map(): cho phép biến đổi kiểu dữ liệu trong quá trình duyệt mảng/ đối tượng
 
+//            List<GrantedAuthority> grantedAuthoritieList = new ArrayList<>();
+//            roles.forEach(role -> {
+//                SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getName());
+//                grantedAuthoritieList.add(grantedAuthority);
+//            });
 
-            List<GrantedAuthority> grantedAuthoritieList = new ArrayList<>();
-            roles.forEach(role -> {
-                SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getName());
-                grantedAuthoritieList.add(grantedAuthority);
-            });
+        List<SimpleGrantedAuthority> grantedAuthoritieList  =    roles.stream().map(item -> new SimpleGrantedAuthority(item.getName())).toList();
 
             return new UsernamePasswordAuthenticationToken("", "", grantedAuthoritieList);
         }else {
