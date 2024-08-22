@@ -1,7 +1,10 @@
 package com.Tsoft.UniClub.controller;
 
 import com.Tsoft.UniClub.model.ResponseMessage;
+import com.Tsoft.UniClub.request.AddProductRequest;
+import com.Tsoft.UniClub.response.BaseResponse;
 import com.Tsoft.UniClub.service.FilesStorageService;
+import com.Tsoft.UniClub.service.ProductService;
 import com.Tsoft.UniClub.utils.JwtUtilHeplers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,24 +19,19 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/product")
 public class ProductController {
 
-    @Autowired
-    FilesStorageService storageService;
 
+    @Autowired
+    private ProductService productService;
 
     @PostMapping("/upload")
-    public ResponseEntity<?> addProduct(@RequestParam("file") MultipartFile file){
+    public ResponseEntity<?> addProduct(AddProductRequest addProductRequest){
 
-        String message = "";
+        productService.addProduct(addProductRequest);
 
-        try {
-            storageService.save(file);
-
-            message = "Uploaded the file successfully: " + file.getOriginalFilename();
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
-        } catch (Exception e) {
-            message = "Could not upload the file: " + file.getOriginalFilename() + ". Error: " + e.getMessage();
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
-        }
+        BaseResponse baseResponse = new BaseResponse();
+        baseResponse.setMessage("success !!");
+        baseResponse.setStatusCode(200);
+       return new ResponseEntity<>(baseResponse, HttpStatus.OK);
 
 
     }
