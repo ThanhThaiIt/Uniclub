@@ -17,7 +17,7 @@ public class JwtUtilHeplers {
     @Value("${jwt.privateKey}")
     private String privateKey;//Stores the private key used for signing the JWT.
 
-    private long expiredTime = 15 * 60 * 1000;
+    private long expiredTime = 60 * 60 * 1000;
 
     public String generateToken(String data) {
     // biến key kiểu string đã lưu trữ trước đó thành Secreckey
@@ -39,9 +39,6 @@ public class JwtUtilHeplers {
 
     public String decodeToken(String token) {
         SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(privateKey));
-
-
-
         return Jwts.parser().verifyWith(key).build().parseClaimsJws(token).getPayload().getSubject();
     }
 }
